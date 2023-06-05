@@ -1,31 +1,44 @@
-#   프로젝트명 냉따뚜이   
-#   기능
-#   OCR로 영수증 이미지 스캔 및 정보 가공   
-#       이미지 처리
-#   데이터 가공 및 학습
-#       식재료 데이터 가공하기  3
-#       식재료 아닌 데이터 가공하기 1
-#           냉장고 들어가는거 1, 나머지 0
-#       위 두 자료 병합해서 학습시킬 데이터 만들기
-#       학습 시키기 ( 3가지 분류기 이상으로)
-#       정확도 얼마? 96% 이상
-#   냉장고 안 재료 데이터화 해서 레시피 추천    // json    
-#   추천한 레시피 기반으로 다른 정보 제공
-#       유튜브 or 어떤거   
-# /////////////////////////////////////////////////////////////////////////////
-#   기존에 냉장고에 들어 있는 재료 입력
-            # 체크리스트 테이블 보여줌
-#   유통기한은 어떻게 입력
-#   새우깡 새우젓   //  고구마 고구마깡
-#   식재료랑 과자 같은거 구분
-#   소고기 // 살치 등심 우삼겹
-#   양?
-#   리마인드 -> 큐에 넣어서 ? 아니면 날짜로 
-#   공산품 분리?
-#   
-#/////////////////////////////////////////////////////////////////////////////
-#   app web utls 
-#       web
-#
-#   레퍼런스, 자료출처 표기
+from flask import Flask, render_template, request
+import package as pk
+app = Flask(__name__)
 
+@app.route('/')
+def home():
+    menu = {'ho':1,'us':0,'cr':0,'sc':0}
+    return render_template('prototype/home.html',menu=menu, weather=get_weather(app))
+
+@app.route('/schedule')
+def schedule():
+    menu = {'ho':0,'us':0,'cr':0,'sc':1}
+    return render_template('prototype/02.schedule.html',menu=menu, weather=get_weather(app))
+
+@app.route('/self_intr')
+def self_intr():
+    menu = {'ho':0,'us':1,'cr':0,'sc':0}
+    return render_template('prototype/self_intr.html',menu=menu, weather=get_weather(app))
+
+@app.route('/crawling/interpark',methods=['GET','POST'])
+def interpark():
+    menu = {'ho':0,'us':0,'cr':1,'sc':0}
+    booklist = ut.in_bs()
+    return render_template('prototype/interpark.html',menu=menu, weather=get_weather(app),booklist=booklist)
+
+@app.route('/crawling/genie',methods=['GET','POST'])
+def genie():
+    menu = {'ho':0,'us':0,'cr':1,'sc':0}
+    chart_list = ut.genie_chart()
+    return render_template('prototype/genie.html',menu=menu, weather=get_weather(app),chart_list=chart_list)
+
+@app.route('/crawling/siksin',methods=['GET','POST'])
+def siksin():
+    menu = {'ho':0,'us':0,'cr':1,'sc':0}
+    if request.method == 'GET':
+        return render_template('prototype/siksin.html',menu=menu, weather=get_weather(app))
+    else:
+        place = request.form['place']
+        siksin_list = ut.siksin_search(place)
+        return render_template('prototype/siksin_res.html',menu=menu, weather=get_weather(app),siksin_list=siksin_list)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

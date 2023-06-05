@@ -31,12 +31,12 @@ def stn_name_modification(name=main_file_name):
         return df_st
     
 def line_sep_preproc_main():
-    
+    si_list = '오이도 정왕 신길오천 안산 초지 고잔 중앙 한대앞'.split()
+    copy_list = []
     df = stn_name_modification()
     lines = df.호선명.unique().tolist()
     df_dict = {line: df[df['호선명'] == line].copy() for line in lines}
     for line, frame in df_dict.items():
-        # frame = df[df['호선명']==line].copy()
         frame['새벽 승차인원'] = frame.loc[:,['04시-05시 승차인원','05시-06시 승차인원']].sum(axis=1)
         frame['새벽 하차인원'] = frame.loc[:,['04시-05시 하차인원','05시-06시 하차인원']].sum(axis=1)
 
@@ -59,10 +59,17 @@ def line_sep_preproc_main():
                         '새벽 승차인원','새벽 하차인원','야간 승차인원', '야간 하차인원','총 승차인원','총 하차인원']]
         
         frame.loc[(frame['호선명'] == '2호선') & (frame['지하철역'] == '신천'), '지하철역'] = '잠실새내'
-
+        # 수인선 누락 추가
+        frame_copy = frame[(frame['호선명']=='안산선')&(frame['지하철역'].isin(si_list))].copy()
+        frame_copy['호선명'] = frame_copy['호선명'].apply(lambda x: '수인선_누락')
+        frame_copy = frame_copy.reset_index(drop=True)
+        copy_list.append(frame_copy)
         frame.to_csv(f'{temp_files_path}{line}.csv',index=False,encoding='utf-8')
+    pd.concat(copy_list).to_csv(f'{temp_files_path}수인선_누락.csv',index=False,encoding='utf-8')
     return None
 
+# 미리 정해둔 양식으로 호선을 분리
+# 2019 이후 자료에는 9호선 2단계가 없어서 따로 처리
 def rtn_line_info(year):
     path = temp_files_path
     line_info = [
@@ -74,7 +81,7 @@ def rtn_line_info(year):
         ([f'{path}6호선.csv'], '6호선'),
         ([f'{path}7호선.csv'], '7호선'),
         ([f'{path}8호선.csv'], '8호선'),
-        ([f'{path}수인선.csv', f'{path}분당선.csv'], '수인분당선'),
+        ([f'{path}수인선.csv',f'{path}수인선_누락.csv', f'{path}분당선.csv'], '수인분당선'),
         ([f'{path}경의선.csv', f'{path}중앙선.csv'], '경의중앙선'),
         ([f'{path}공항철도 1호선.csv'], '공항철도')
     ]
