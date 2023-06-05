@@ -3,6 +3,7 @@ password.txt
 test.py
 test.ipynb
 key/
+data_dhm/
 
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
