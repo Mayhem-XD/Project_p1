@@ -331,8 +331,19 @@
 						$menu._hide();
 
 			});
-			$(document).ready(function() {
-				$(".datepicker").datepicker();
-			  });
-			  
+			// datepicker 열기 버튼을 클릭했을 때의 이벤트 핸들러
+			document.getElementById('open-datepicker').addEventListener('click', function() {
+				var datepicker = document.getElementById('datepicker');
+				datepicker.focus(); // datepicker 열기
+			});
+			
+			// 드랍다운 메뉴 토글 함수
+			function toggleDropdown(id) {
+				var dropdown = document.getElementById(id);
+				if (dropdown.style.display === "none") {
+					dropdown.style.display = "block";
+				} else {
+					dropdown.style.display = "none";
+				}
+				}
 })(jQuery);

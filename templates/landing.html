@@ -9,12 +9,17 @@
 		<title>Landing</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="static/css/main.css" />
-		<noscript><link rel="stylesheet" href="static/css/noscript.css" /></noscript>
+		<link rel="stylesheet" href="../static/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="../static/assets/css/noscript.css" /></noscript>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+		<script src="script.js"></script>
 
 		<style>
+			.dropdown-content-options {
+  			width: 200px; /* 예시로 200px로 설정 */
+			}
 			.dropdown-content a {
 				color: #000000;
 			}
@@ -22,52 +27,70 @@
 				color: #000000;
 			}
 			.dropdown {
-				position: relative;
-				display: inline-block;
+			position: relative;
+			display: inline-block;
 			}
+			
 			.dropdown-content {
-				display: none;
-				position: absolute;
-				min-width: 160px;
-				padding: 12px;
-				background-color: #f9f9f9;
-				box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-				z-index: 1;
-				top: 100%;
-				left: 0;
-				display: flex;
-				flex-direction: column;
+			display: none;
+			position: absolute;
+			background-color: #f9f9f9;
+			min-width: 160px;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+			z-index: 1;
+			padding: 10px 0;
 			}
+			
 			.dropdown:hover .dropdown-content {
-				display: block;
-			}
-			.dropdown-options {
-				position: relative;
-				display: inline-block;
-			}
-			.dropdown-content-options {
-				display: none;
-				position: absolute;
-				min-width: 160px;
-				padding: 12px;
-				background-color: #f9f9f9;
-				box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-				z-index: 1;
-			}
-			.dropdown-options:hover .dropdown-content-options {
-				display: block;
-				top: 100%;
-				left: 0;
-			}
-		</style>
-		<script>
-			function showDropdownContent() {
-				document.getElementById("dropdownContent").style.display = "block";
+			display: block;
 			}
 
-			function showDropdownContentOptions() {
-				document.getElementById("dropdownContentOptions").style.display = "block";
+			.dropdown-content a {
+			display: block;
+			padding: 8px 16px;
+			text-decoration: none;
+			color: #333;
 			}
+			.datepicker-container {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			}
+			.datepicker-container button {
+			padding: 5px 10px;
+			}
+			.datepicker-container input {
+			padding: 5px;
+			width: 150px;
+			}
+			#footer {
+			text-align: center; /* 푸터 내용을 가운데 정렬 */
+			margin-top: 20px; /* 원하는 여백 값으로 조정 (예시: 20px) */
+			}
+
+		</style>
+		<script>
+			$(document).ready(function() {
+			$("#datepicker-btn1").click(function() {
+				$("#datepicker1").datepicker("show");
+			});
+
+			$("#datepicker1").datepicker({
+				onSelect: function(dateText) {
+				$("#datepicker1").val(dateText);
+				}
+			});
+
+			$("#datepicker-btn2").click(function() {
+				$("#datepicker2").datepicker("show");
+			});
+
+			$("#datepicker2").datepicker({
+				onSelect: function(dateText) {
+				$("#datepicker2").val(dateText);
+				}
+			});
+			});
 		</script>
 	</head>
 	<body class="is-preload">
@@ -77,12 +100,13 @@
 
 			<!-- Header -->
 			<!-- Note: The "styleN" class below should match that of the banner element. -->
-			<header id="header" class="alt style2">
+			<header id="header" class="alt">
 				<a href="index.html" class="logo"><strong>2조</strong> <span>역이요</span></a>
 				<nav>
 					<a href="#menu"></a>
 				</nav>
 			</header>
+
 
 			<!-- Menu -->
 			<nav id="menu">
@@ -92,44 +116,46 @@
 					<li><a href="generic.html">출처</a></li>
 				</ul>
 			</nav>
-
+			
 			<!-- Banner -->
 			<!-- Note: The "styleN" class below should match that of the header element. -->
 			<section id="banner" class="style2">
 				<div class="inner">
 					<span class="image">
-						<img src="images/pic07.jpg" alt="" />
+						<img src="../static/assets/images/pic07.jpg" alt="" />
 					</span>
 					<header class="major">
 						<h1>히트맵</h1>
 					</header>
 					<div class="content">
-						<p>여기에 히트맵 그릴듯</p>
-					</div>
-					<div class="dropdown">
-						<button type="button" class="btn btn-primary dropdown-toggle" onclick="showDropdownContent()">설정</button>
-						<div class="dropdown-content" id="dropdownContent">
-							<a class="dropdown-item" href="#">링크 1</a>
-							<a class="dropdown-item" href="#">링크 2</a>
-							<a class="dropdown-item" href="#">링크 3</a>
+						<div class="dropdown">
+							<button>호선</button>
+							<div class="dropdown-content" id="dropdown1">
+							<!-- 호선 채워넣기 -->
+							<a href="#">링크 1</a>
+							<a href="#">링크 2</a>
+							<a href="#">링크 3</a>
+							</div>
 						</div>
-					</div>
-					<!-- 시작일 버튼 -->
-					<button id="startDateBtn" class="btn btn-primary">시작일</button>
-
-					<!-- 종료일 버튼 -->
-					<button id="endDateBtn" class="btn btn-primary">종료일</button>
-
-					<div class="dropdown-options">
-						<button type="button" class="btn btn-primary dropdown-toggle" onclick="showDropdownContentOptions()">옵션</button>
-						<div class="dropdown-content-options" id="dropdownContentOptions">
-							<a class="dropdown-item" href="#">링크 1</a>
-							<a class="dropdown-item" href="#">링크 2</a>
-							<a class="dropdown-item" href="#">링크 3</a>
+											
+						<div class="datepicker-container">
+							<button id="button1">시작일</button>
+							<input type="text" id="datepicker1" readonly>
+							<button id="button2">종료일</button>
+							<input type="text" id="datepicker2" readonly>
 						</div>
+						
+
+						<div class="dropdown">
+							<button>옵션</button>
+							<div class="dropdown-content" id="dropdown2">
+							<a href="#">링크 4</a>
+							<a href="#">링크 5</a>
+							<a href="#">링크 6</a>
+							</div>
+						</div>
+						<button>확인</button>
 					</div>
-					<button type="button" class="btn btn-primary">확인</button>
-				</div>
 			</section>
 
 			<!-- 히트맵 부분 -->
@@ -144,38 +170,56 @@
 								<!-- 사진 영역을 지도로 수정 가능한지 확인해야함 -->
 								<div class="col-md-6">
 								</div>
-								<br>
-								<br>
-								<br>
 							</div>
 						</div>
 					</section>
 				</div>
 			</section>
 		</div>
+	</body>
 		<!-- Footer -->
-		<footer id="footer">
-			<div class="inner">
-				<ul class="icons">
-					<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
-					<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
-					<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-					<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-					<li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-				</ul>
-			</div>
-		</footer>
+	<footer id="footer">
+		<div class="inner">
+			<ul class="icons">
+				<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
+				<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+			</ul>
+		</div>
+	</footer>
 
 		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+		<script src="../static/assets/js/jquery.min.js"></script>
+		<script src="../static/assets/js/browser.min.js"></script>
+		<script src="../static/assets/js/breakpoints.min.js"></script>
+		<script src="../static/assets/js/util.js"></script>
+		<script src="../static/assets/js/main.js"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		<script>
+			function showDropdownContent() {
+				document.getElementById("dropdownContent").classList.toggle("show");
+			}
+
+			function showDropdownContentOptions() {
+				document.getElementById("dropdownContentOptions").classList.toggle("show");
+			}
+
 			$(document).ready(function () {
 				$("#startDateBtn").datepicker();
 				$("#endDateBtn").datepicker();
+			});
+			$("#datepicker1").datepicker({
+				onSelect: function(dateText) {
+				$("#datepicker1").val(dateText);
+				}
+			});
+
+			$("#datepicker2").datepicker({
+				onSelect: function(dateText) {
+				$("#datepicker2").val(dateText);
+				}
 			});
 		</script>
 
