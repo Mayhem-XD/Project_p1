@@ -44,5 +44,33 @@ window.addEventListener('DOMContentLoaded', event => {
             dropdowns[i].style.display = "none";
         }
     };
+    // Datepicker 요소 가져오기
+    var datepicker = document.getElementById("datepicker");
 
-});
+    // 주간 Datepicker 설정
+    var currentDate = new Date();  // 현재 날짜
+    var firstDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());  // 현재 주의 첫째 날짜
+    var lastDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (6 - currentDate.getDay()));  // 현재 주의 마지막 날짜
+
+    // 주간 Datepicker에 대한 옵션 설정
+    var options = {
+    dateFormat: "yy-mm-dd",  // 날짜 형식
+    minDate: firstDayOfWeek,  // 최소 선택 가능한 날짜
+    maxDate: lastDayOfWeek,  // 최대 선택 가능한 날짜
+    beforeShowDay: function(date) {  // 각 날짜에 대한 스타일 설정
+        var cssClass = "";
+        if (date >= firstDayOfWeek && date <= lastDayOfWeek) {
+        cssClass = "highlight";
+        }
+        return [true, cssClass];
+    },
+    onSelect: function(dateText, inst) {  // 날짜 선택 시 이벤트 처리
+        // 선택한 날짜 처리
+        console.log("선택한 날짜:", dateText);
+    }
+    };
+  
+    // Datepicker 초기화
+    $(datepicker).datepicker(options);
+      });
+

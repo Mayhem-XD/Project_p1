@@ -346,4 +346,88 @@
 					dropdown.style.display = "none";
 				}
 				}
+			// jQuery UI Datepicker를 주간(date range) 모드로 설정하는 예시
+			$(function() {
+				// 시작 날짜와 종료 날짜를 선택하는 입력 상자의 ID를 가져옵니다.
+				var startDateInputId = '#start-date';
+				var endDateInputId = '#end-date';
+			
+				// jQuery UI Datepicker를 시작 날짜와 종료 날짜 입력 상자에 적용합니다.
+				$(startDateInputId).datepicker({
+				dateFormat: 'yyyy-mm-dd',  // 선택한 날짜의 형식 설정
+				onSelect: function(selectedDate) {
+					// 시작 날짜를 선택했을 때의 동작
+					var endDate = $(endDateInputId).datepicker('getDate');
+					$(endDateInputId).datepicker('option', 'minDate', selectedDate);
+				}
+				});
+			
+				$(endDateInputId).datepicker({
+				dateFormat: 'yyyy-mm-dd',  // 선택한 날짜의 형식 설정
+				onSelect: function(selectedDate) {
+					// 종료 날짜를 선택했을 때의 동작
+					var startDate = $(startDateInputId).datepicker('getDate');
+					$(startDateInputId).datepicker('option', 'maxDate', selectedDate);
+				}
+				});
+			});
+			$(function() {
+				// 기존의 버튼과 일일(date) datepicker의 ID를 가져옵니다.
+				var dailyDatepickerButtonId = '#daily-datepicker-button';
+				var dailyDatepickerId = '#daily-datepicker';
+			  
+				// 시작 날짜와 종료 날짜를 선택하는 입력 상자의 ID를 가져옵니다.
+				var startDateInputId = '#start-date';
+				var endDateInputId = '#end-date';
+			  
+				// 주간(date range) datepicker를 초기화합니다.
+				$(startDateInputId).datepicker({
+				  dateFormat: 'yy-mm-dd',
+				  onSelect: function(selectedDate) {
+					var endDate = $(endDateInputId).datepicker('getDate');
+					$(endDateInputId).datepicker('option', 'minDate', selectedDate);
+					updateDailyDatepicker(selectedDate, endDate);
+				  }
+				});
+			  
+				$(endDateInputId).datepicker({
+				  dateFormat: 'yy-mm-dd',
+				  onSelect: function(selectedDate) {
+					var startDate = $(startDateInputId).datepicker('getDate');
+					$(startDateInputId).datepicker('option', 'maxDate', selectedDate);
+					updateDailyDatepicker(startDate, selectedDate);
+				  }
+				});
+			  
+				// Datepicker 요소 가져오기
+				var datepicker = document.getElementById("datepicker");
+
+				// 주간 Datepicker 설정
+				var currentDate = new Date();  // 현재 날짜
+				var firstDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());  // 현재 주의 첫째 날짜
+				var lastDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (6 - currentDate.getDay()));  // 현재 주의 마지막 날짜
+
+				// 주간 Datepicker에 대한 옵션 설정
+				var options = {
+				dateFormat: "yy-mm-dd",  // 날짜 형식
+				minDate: firstDayOfWeek,  // 최소 선택 가능한 날짜
+				maxDate: lastDayOfWeek,  // 최대 선택 가능한 날짜
+				beforeShowDay: function(date) {  // 각 날짜에 대한 스타일 설정
+					var cssClass = "";
+					if (date >= firstDayOfWeek && date <= lastDayOfWeek) {
+					cssClass = "highlight";
+					}
+					return [true, cssClass];
+				},
+				onSelect: function(dateText, inst) {  // 날짜 선택 시 이벤트 처리
+					// 선택한 날짜 처리
+					console.log("선택한 날짜:", dateText);
+				}
+				};
+			  
+				// Datepicker 초기화
+				$(datepicker).datepicker(options);
+			  	});
+			  
+  
 })(jQuery);
