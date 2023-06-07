@@ -22,5 +22,27 @@ window.addEventListener('DOMContentLoaded', event => {
             localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
         });
     }
+        // 드롭다운 메뉴 토글 함수
+    function toggleDropdown(id) {
+        var dropdown = document.getElementById(id);
+
+        // 드롭다운 메뉴의 display 속성을 가져옴
+        var dropdownStyle = window.getComputedStyle(dropdown);
+
+        // 드롭다운 메뉴의 display 속성이 "none"이면 보이도록 변경, 그렇지 않으면 숨김 처리
+        if (dropdownStyle.display === "none") {
+            dropdown.style.display = "block";
+        } else {
+            dropdown.style.display = "none";
+        }
+    }
+
+    // 문서 로드 시 모든 드롭다운 메뉴 숨김 처리
+    window.onload = function() {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            dropdowns[i].style.display = "none";
+        }
+    };
 
 });
