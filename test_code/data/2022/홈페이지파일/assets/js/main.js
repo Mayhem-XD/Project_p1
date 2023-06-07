@@ -334,5 +334,13 @@
 			$(document).ready(function() {
 				$(".datepicker").datepicker();
 			  });
-			  
+			function showDropdownContentOptions(id) {
+			var dropdownContentOptions = document.getElementById("dropdownContentOptions" + id);
+			if (dropdownContentOptions.style.display === "none") {
+				dropdownContentOptions.style.display = "block";
+			} else {
+				dropdownContentOptions.style.display = "none";
+			}
+			}
+				
 })(jQuery);
