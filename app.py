@@ -6,9 +6,9 @@ app = Flask(__name__)
 def home():
     return render_template('/index.html')
 
-@app.route('/schedule')
-def schedule():
-    return render_template('prototype/02.schedule.html')
+@app.route('/heatmap')
+def heatmap():
+    return render_template('/landing.html')
 
 @app.route('/self_intr')
 def self_intr():
