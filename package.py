@@ -4,14 +4,18 @@ import os,glob
 from urllib.parse import quote 
 import requests,json,os
 
-main_datafile_path = 'data/'
-temp_files_path = 'data/temp_files/'
+# 패스 선언
+main_datafile_path = 'static/data/'
+temp_files_path = 'static/data/temp_files/'
 main_file_name = f'{main_datafile_path}metro_ridership_by_line_stn_time.csv'
-xlsx_path = 'data/total_stn_info_20230317.xlsx'
+xlsx_path = 'static/data/total_stn_info_20230317.xlsx'
 temp_info_name = f'{temp_files_path}temp_info.csv'
-key_path = 'data/key/kakaoapikey.txt'
+key_path = 'static/key/kakaoapikey.txt'
+sk_key_path = 'static/key/sk_open_api_key.txt'
 heatmap_data = f'{main_datafile_path}merged_lines.csv'
+stn_code_file_path = os.path.join('static', 'data', 'file.txt')
 
+# 파일이름 입력받아 일일 데이터인지 전체기간 시간별 데이터인지 구볋 후 각각의 양식에 맞게 처리
 def stn_name_modification(name=main_file_name):
     if name == main_file_name:
         df_st = pd.read_csv(name,encoding='euc-kr')
@@ -29,14 +33,18 @@ def stn_name_modification(name=main_file_name):
             if df_st.loc[i, '지하철역'][-1] == '역':
                 df_st.loc[i, '지하철역'] = df_st.loc[i, '지하철역'][:-1]
         return df_st
-    
+
+# 전체 데이터에 특정 조건의 열로 변경
+# 다음 단계에서 일반적으로 사용하는 호선으로 다듬기 위해서 여기서 각 호선별로 분리
 def line_sep_preproc_main():
+    # 수인분당선에서 누락되는 역명들
     si_list = '오이도 정왕 신길오천 안산 초지 고잔 중앙 한대앞'.split()
     copy_list = []
     df = stn_name_modification()
     lines = df.호선명.unique().tolist()
     df_dict = {line: df[df['호선명'] == line].copy() for line in lines}
     for line, frame in df_dict.items():
+        # frame = df[df['호선명']==line].copy()
         frame['새벽 승차인원'] = frame.loc[:,['04시-05시 승차인원','05시-06시 승차인원']].sum(axis=1)
         frame['새벽 하차인원'] = frame.loc[:,['04시-05시 하차인원','05시-06시 하차인원']].sum(axis=1)
 
@@ -57,9 +65,9 @@ def line_sep_preproc_main():
         frame = frame[['사용월', '호선명', '지하철역', '출근시간 승차인원', '출근시간 하차인원', 
                         '09-16시 승차인원', '09-16시 하차인원', '퇴근시간 승차인원', '퇴근시간 하차인원',
                         '새벽 승차인원','새벽 하차인원','야간 승차인원', '야간 하차인원','총 승차인원','총 하차인원']]
-        
+        # 2호선 신천역이 잠실새내역으로 바뀌고 새로운 신천역 생겨서 예전 자료에서의 2호선 신천역 잠실새내 역으로 변경
         frame.loc[(frame['호선명'] == '2호선') & (frame['지하철역'] == '신천'), '지하철역'] = '잠실새내'
-        # 수인선 누락 추가
+        # 수인분당선에서 누락된 안산선의 역들 따로 추출
         frame_copy = frame[(frame['호선명']=='안산선')&(frame['지하철역'].isin(si_list))].copy()
         frame_copy['호선명'] = frame_copy['호선명'].apply(lambda x: '수인선_누락')
         frame_copy = frame_copy.reset_index(drop=True)
@@ -81,52 +89,68 @@ def rtn_line_info(year):
         ([f'{path}6호선.csv'], '6호선'),
         ([f'{path}7호선.csv'], '7호선'),
         ([f'{path}8호선.csv'], '8호선'),
+        ([f'{path}경춘선.csv'], '경춘선'),
         ([f'{path}수인선.csv',f'{path}수인선_누락.csv', f'{path}분당선.csv'], '수인분당선'),
         ([f'{path}경의선.csv', f'{path}중앙선.csv'], '경의중앙선'),
         ([f'{path}공항철도 1호선.csv'], '공항철도')
     ]
+    # 19년도 이후 자료에는 9호선 2단계가 없음
     if year >= 2019:
         line_info.append(([f'{path}9호선.csv', f'{path}9호선2~3단계.csv'], '9호선'))
     else:
         line_info.append(([f'{path}9호선.csv', f'{path}9호선2단계.csv', f'{path}9호선2~3단계.csv'], '9호선'))
     return line_info
 
+
+# rtn_line_info(year) 함수에서 만들어진 파일들을 제거하는 함수
 def rm_temp_files():
     temp_path = os.path.join('data', 'temp_files', '*.csv')
     for file in glob.glob(temp_path):
         os.remove(file)
     return None
 
+# 임시로 만들어진 info 파일을 제거하는 함수
 def rm_temp_info_files(year,ck_week):
     file = os.path.join('data',  f'{year}_{ck_week}_sub_info.csv')
     os.remove(file)
     return None
 
+# 호선 전처리 함수
+# rtn_line_info() 함수에서 불러온 line_info를 이용
+# 호선명은 불러온 line_info에 있는 line_name 으로 사용
 def preprocessing_lines(year=2019):
     line_list = []
     line_info = rtn_line_info(year)
+    # df_copies에는 df_list에 있는 csv파일들을 불러와서 데이터프레임으로 만들고 append함
     for df_list, line_name in line_info:
         df_copies = []
         for file in df_list:
             df = pd.read_csv(file)
             df_copies.append(df.copy())
+        # 모두 불러왔으면 concat 함수로 하나의 데이터프레임으로 만들고 인덱스 정리
         result = pd.concat(df_copies, axis=0)
         result = result.reset_index(drop=True)
         result.호선명 = line_name
         cols = list(result.columns)[:3]
         target = list(result.columns)[3:]
+        # 그 후 groupby로 중복된 역들의 데이터 합산 ex) 1호선 서울역, 경부선 서울역
         res = result.groupby(cols)[target].agg('sum').reset_index()
         line_list.append(res)
     final = pd.concat(line_list,axis=0)
     rm_temp_files()
     return final
 
+# 메인 데이터파일 전처리 함수
+# 함수 호출시 merged_lines.csv 파일 생성
 def preproc_main():
     line_sep_preproc_main()
     final = preprocessing_lines()
     final.to_csv(f'{main_datafile_path}merged_lines.csv',index=False)
     return None
 
+# 각 년도 일일 데이터 전처리 함수
+# 연도와 주중/주말 입력받아 실행
+# 각 년도의 일일 데이터를 월별 데이터로 변환
 def stn_sub_modification(year,ck_week):
     name = f'{main_datafile_path}{year}.csv'
     
@@ -136,7 +160,7 @@ def stn_sub_modification(year,ck_week):
     df1['사용일자'] = pd.to_datetime(df1['사용일자'], format='%Y%m%d')
     # 평일과 주말 구분하는 새로운 열 생성
     df1['주중/주말'] = df1['사용일자'].apply(lambda x: '주말' if x.weekday() >= 5 else '주중')
-    # 주중/주말 선택    나중에 에러방지 추가해야함
+    # 주중/주말 선택
     rtn_week = '주중' if ck_week == '주중' else '주말'
     weekday_df = df1[df1['주중/주말'] == rtn_week]
     week_df = weekday_df.copy()
@@ -153,6 +177,8 @@ def stn_sub_modification(year,ck_week):
     df_res.to_csv(f'{main_datafile_path}{year}_{ck_week}_sub_info.csv', index=False)
     return None
 
+# 일일 데이터 가공
+# preproc_main과 크게 다르지는 않음
 def preproc_sub(year,ck_week):
     
     stn_sub_modification(year,ck_week)
@@ -161,15 +187,25 @@ def preproc_sub(year,ck_week):
     
     lines = df.호선명.unique().tolist()
     df_dict = {line: df[df['호선명'] == line].copy() for line in lines}
+    copy_list = []
+    si_list = '오이도 정왕 신길오천 안산 초지 고잔 중앙 한대앞'.split()
     for line, frame in df_dict.items():
         frame.loc[(frame['호선명'] == '2호선') & (frame['지하철역'] == '신천'), '지하철역'] = '잠실새내'
+        
+        frame_copy = frame[(frame['호선명']=='안산선')&(frame['지하철역'].isin(si_list))].copy()
+        frame_copy['호선명'] = frame_copy['호선명'].apply(lambda x: '수인선_누락')
+        frame_copy = frame_copy.reset_index(drop=True)
+        copy_list.append(frame_copy)
         frame.to_csv(f'{temp_files_path}{line}.csv',index=False,encoding='utf-8')
+    pd.concat(copy_list).to_csv(f'{temp_files_path}수인선_누락.csv',index=False,encoding='utf-8')
 
     final = preprocessing_lines(year)
     rm_temp_files()
     rm_temp_info_files(year,ck_week)
     final.to_csv(f'{main_datafile_path}{year}_{ck_week}_merged_lines.csv',index=False)
+    return None
 
+# kakao local API로 좌표를 구하는 함수
 def kakao_location(place):
     with open({key_path}) as f_:
         kakao_key = f_.read()
@@ -181,10 +217,14 @@ def kakao_location(place):
     lng_ = float(result['documents'][0]['x'])
     return lat_,lng_
 
+# 데이터 프레임에서 역명을 입력받아 도로명주소를 반환하는 함수
 def rtn_addr(df,target):
     str_addr = df[df.지하철역 == target].도로명주소.values[-1]
     return str_addr.strip()
 
+# 전체 역사 데이터에서 사용할 부분만 추출
+# 그 역사들의 위경도를 구해서 추가
+# 오타/오기 등으로 잘못 된 역사 주소 수정
 def get_stn_lat_lng():
     df = pd.read_excel(xlsx_path,engine='openpyxl')
     df.to_csv(temp_info_name,index=False)
@@ -216,12 +256,56 @@ def get_stn_lat_lng():
     df2.to_csv(f'{main_datafile_path}stn_r_addr_final.csv',index=False)
     return None
 
-
+# 히트맵을 사용하기 위해 get_stn_lat_lng()에서 구한 역사별 위경도 자료와 merge함
 def add_lat_lng(name=heatmap_data):
     df_latlng = pd.read_csv(f'{main_datafile_path}stn_r_addr_final.csv')
     df_latlng.drop(columns=['도로명주소'], inplace=True)
 
     df_main = pd.read_csv(name)
     res = pd.merge(df_main, df_latlng, on='지하철역', how='left')
-    res.to_csv(f'{main_datafile_path}lines_4heatmap_{name[5:9]}.csv', index=False)
+    res.to_csv(f'{main_datafile_path}lines_4heatmap_{name[5:12]}.csv', index=False)
     return None
+
+def create_stn_code():
+    url = "https://apis.openapi.sk.com/puzzle/subway/meta/stations?type=train"
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "appkey": sk_key_path
+    }
+    response = requests.get(url, headers=headers).json()
+    re = response['contents']
+    df = pd.DataFrame(re)
+    df.to_csv(f'{main_datafile_path}stn_code.csv',index=False)
+    return None
+
+def get_stn_code(station):
+    df_read = pd.read_csv(f'{main_datafile_path}stn_code.csv')
+    stn = station  # 입력할 역
+    stn_code = df_read[df_read['stationName'] == stn]['stationCode'].values[0]
+    return stn_code
+
+def get_cong(station,dow,hh,mm):
+    if not os.path.exists(stn_code_file_path):
+        create_stn_code()
+    station_code = get_stn_code(station)
+    url = f"https://apis.openapi.sk.com/puzzle/subway/congestion/stat/train/stations/{station_code}?dow={dow}&hh={hh}"
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "appkey": sk_key_path
+    }
+
+    response = requests.get(url, headers=headers).json()
+    data1 = [pd.DataFrame(stat['data']) for stat in response['contents']['stat'] if stat['updnLine'] == 1]
+    data2 = [pd.DataFrame(stat['data']) for stat in response['contents']['stat'] if stat['updnLine'] == 0]
+    df = pd.concat(data1)
+    df['updn'] = 1
+    df_ = pd.concat(data2)
+    df_['updn'] = 0
+    df = pd.concat((df,df_))
+    df_res = df[df['congestionTrain'] != 0].copy()
+    df_res = df_res[df_res['mm'] == mm].copy()
+    df_res.drop(columns=['dow','hh','mm'],inplace=True)
+    df_res = df.groupby('updn')['congestionTrain'].agg('max').reset_index().round(2)
+    return df_res.values
