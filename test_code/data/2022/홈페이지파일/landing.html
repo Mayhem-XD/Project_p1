@@ -11,8 +11,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 		<style>
 			.dropdown-content a {
+				color: #000000;
+			}
+			.dropdown-content-options {
 				color: #000000;
 			}
 		</style>
@@ -51,6 +56,7 @@
 				z-index: 1;
 			}
 
+			
 			.dropdown-options:hover .dropdown-content-options {
 				display: block;
 				top: 100%;
@@ -111,25 +117,24 @@
 							<a class="dropdown-item" href="#">링크 3</a>
 						</div>
 					</div>
+					<!-- 시작일 버튼 -->
+					<button id="startDateBtn" class="btn btn-primary datepicker">시작일</button>
+
+					<!-- 종료일 버튼 -->
+					<button id="endDateBtn" class="btn btn-primary datepicker">종료일</button>
+
 					<div class="dropdown-options">
-						<button class="dropbtn" onclick="showDropdownContentOptions()">시작일</button>
+						<button type="button" class="btn btn-primary dropdown-toggle" onclick="showDropdownContentOptions()">옵션</button>
 						<div class="dropdown-content-options" id="dropdownContentOptions">
-							<table>
-								<!-- 드롭다운 옵션 내용을 여기에 추가 -->
-							</table>
+							<a class="dropdown-item" href="#">링크 1</a>
+							<a class="dropdown-item" href="#">링크 2</a>
+							<a class="dropdown-item" href="#">링크 3</a>
 						</div>
-					</div>
-					<button class="dropbtn">종료일</button>
-					<button type="button" class="btn btn-primary dropdown-toggle" onclick="showDropdownContent()">옵션</button>
-					<div class="dropdown-content" id="dropdownContent">
-						<a class="dropdown-item" href="#">링크 1</a>
-						<a class="dropdown-item" href="#">링크 2</a>
-						<a class="dropdown-item" href="#">링크 3</a>
 					</div>
 					<button type="button" class="btn btn-primary">확인</button>
 				</div>
 			</section>
-
+	
 			<!-- 히트맵 부분 -->
 			<section id="three">
 				<div class="inner">
@@ -151,6 +156,7 @@
 				</div>
 			</section>
 		</div>
+	
 		<!-- Footer -->
 		<footer id="footer">
 			<div class="inner">
