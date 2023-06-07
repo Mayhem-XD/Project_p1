@@ -340,7 +340,8 @@
 				dropdownContentOptions.style.display = "block";
 			} else {
 				dropdownContentOptions.style.display = "none";
-			}
-			}
+			}}
+			
+			
 				
 })(jQuery);
