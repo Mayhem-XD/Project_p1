@@ -107,14 +107,14 @@ def rtn_line_info(year):
 
 # rtn_line_info(year) 함수에서 만들어진 파일들을 제거하는 함수
 def rm_temp_files():
-    temp_path = os.path.join('data', 'temp_files', '*.csv')
+    temp_path = os.path.join('static','data', 'temp_files', '*.csv')
     for file in glob.glob(temp_path):
         os.remove(file)
     return None
 
 # 임시로 만들어진 info 파일을 제거하는 함수
 def rm_temp_info_files(year,ck_week):
-    file = os.path.join('data',  f'{year}_{ck_week}_sub_info.csv')
+    file = os.path.join('static','data',  f'{year}_{ck_week}_sub_info.csv')
     os.remove(file)
     return None
 
