@@ -29,11 +29,12 @@ def tour():
 
         map = folium.Map(location=[lat, lng],zoom_start=15, width='100%', height='100%')
         for i in df.index:
+            logo = folium.CustomIcon(f'data/icons/{df.분류[i]}.png', icon_size=(30,30))
             folium.Marker(
                 location=[df.lat[i],df.lng[i]],
                 popup=folium.Popup(df.도로명주소[i], max_width=200),
                 tooltip=df.관광지명[i],
-                icon=folium.Icon(icon='check')
+                icon=logo
             ).add_to(map)
 
         folium.Circle(
