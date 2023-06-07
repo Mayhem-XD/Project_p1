@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<!--
+	Forty by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Landing</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+		<style>
+			.dropdown-content a {
+				color: #000000;
+			}
+			.dropdown-content-options {
+				color: #000000;
+			}
+			.dropdown {
+				position: relative;
+				display: inline-block;
+			}
+			.dropdown-content {
+				display: none;
+				position: absolute;
+				min-width: 160px;
+				padding: 12px;
+				background-color: #f9f9f9;
+				box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+				z-index: 1;
+				top: 100%;
+				left: 0;
+				display: flex;
+				flex-direction: column;
+			}
+			.dropdown:hover .dropdown-content {
+				display: block;
+			}
+			.dropdown-options {
+				position: relative;
+				display: inline-block;
+			}
+			.dropdown-content-options {
+				display: none;
+				position: absolute;
+				min-width: 160px;
+				padding: 12px;
+				background-color: #f9f9f9;
+				box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+				z-index: 1;
+			}
+			.dropdown-options:hover .dropdown-content-options {
+				display: block;
+				top: 100%;
+				left: 0;
+			}
+		</style>
+		<script>
+			function showDropdownContent() {
+				document.getElementById("dropdownContent").style.display = "block";
+			}
+
+			function showDropdownContentOptions() {
+				document.getElementById("dropdownContentOptions").style.display = "block";
+			}
+		</script>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Header -->
+			<!-- Note: The "styleN" class below should match that of the banner element. -->
+			<header id="header" class="alt style2">
+				<a href="index.html" class="logo"><strong>2조</strong> <span>역이요</span></a>
+				<nav>
+					<a href="#menu"></a>
+				</nav>
+			</header>
+
+			<!-- Menu -->
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="index.html">Home</a></li>
+					<li><a href="landing.html">히트맵</a></li>
+					<li><a href="generic.html">출처</a></li>
+				</ul>
+			</nav>
+
+			<!-- Banner -->
+			<!-- Note: The "styleN" class below should match that of the header element. -->
+			<section id="banner" class="style2">
+				<div class="inner">
+					<span class="image">
+						<img src="images/pic07.jpg" alt="" />
+					</span>
+					<header class="major">
+						<h1>히트맵</h1>
+					</header>
+					<div class="content">
+						<p>여기에 히트맵 그릴듯</p>
+					</div>
+					<div class="dropdown">
+						<button type="button" class="btn btn-primary dropdown-toggle" onclick="showDropdownContent()">설정</button>
+						<div class="dropdown-content" id="dropdownContent">
+							<a class="dropdown-item" href="#">링크 1</a>
+							<a class="dropdown-item" href="#">링크 2</a>
+							<a class="dropdown-item" href="#">링크 3</a>
+						</div>
+					</div>
+					<!-- 시작일 버튼 -->
+					<button id="startDateBtn" class="btn btn-primary">시작일</button>
+
+					<!-- 종료일 버튼 -->
+					<button id="endDateBtn" class="btn btn-primary">종료일</button>
+
+					<div class="dropdown-options">
+						<button type="button" class="btn btn-primary dropdown-toggle" onclick="showDropdownContentOptions()">옵션</button>
+						<div class="dropdown-content-options" id="dropdownContentOptions">
+							<a class="dropdown-item" href="#">링크 1</a>
+							<a class="dropdown-item" href="#">링크 2</a>
+							<a class="dropdown-item" href="#">링크 3</a>
+						</div>
+					</div>
+					<button type="button" class="btn btn-primary">확인</button>
+				</div>
+			</section>
+
+			<!-- 히트맵 부분 -->
+			<section id="three">
+				<div class="inner">
+					<header class="major">
+					</header>
+					<section class="py-5">
+						<div class="container px-4 px-lg-5 my-5">
+							<div class="row gx-4 gx-lg-5 align-items-center">
+								<div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/1200x700/dee2e6/6c757d.jpg" alt="..." /></div>
+								<!-- 사진 영역을 지도로 수정 가능한지 확인해야함 -->
+								<div class="col-md-6">
+								</div>
+								<br>
+								<br>
+								<br>
+							</div>
+						</div>
+					</section>
+				</div>
+			</section>
+		</div>
+		<!-- Footer -->
+		<footer id="footer">
+			<div class="inner">
+				<ul class="icons">
+					<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
+					<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
+					<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
+					<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+					<li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+				</ul>
+			</div>
+		</footer>
+
+		<!-- Scripts -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+		<script>
+			$(document).ready(function () {
+				$("#startDateBtn").datepicker();
+				$("#endDateBtn").datepicker();
+			});
+		</script>
+
+	</body>
+</html>
