@@ -17,6 +17,10 @@
 		<script src="script.js"></script>
 
 		<style>
+			.datepicker-container button,
+			.datepicker-container input[type="month"] {
+			color: rgb(30, 31, 70);
+		}
 			.dropdown-content-options {
 				width: 200px; /* 예시로 200px로 설정 */
 			}
@@ -164,11 +168,10 @@
 
 						<div class="datepicker-container">
 							<button id="button1">시작월</button>
-							<input type="text" id="monthpicker1" readonly>
+							<input type="month" name="monthField"/>
 							<button id="button2">종료월</button>
-							<input type="text" id="monthpicker2" readonly>
+							<input type="month" name="monthField"/>
 						</div>
-
 						<div class="dropdown">
 							<button>옵션</button>
 							<div class="dropdown-content" id="dropdown2">
