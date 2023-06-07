@@ -17,6 +17,9 @@
 		<script src="script.js"></script>
 
 		<style>
+			.dropdown-content-options {
+  			width: 200px; /* 예시로 200px로 설정 */
+			}
 			.dropdown-content a {
 				color: #000000;
 			}
@@ -60,6 +63,11 @@
 			padding: 5px;
 			width: 150px;
 			}
+			#footer {
+			text-align: center; /* 푸터 내용을 가운데 정렬 */
+			margin-top: 20px; /* 원하는 여백 값으로 조정 (예시: 20px) */
+			}
+
 		</style>
 		<script>
 			$(document).ready(function() {
@@ -123,6 +131,7 @@
 						<div class="dropdown">
 							<button>호선</button>
 							<div class="dropdown-content" id="dropdown1">
+							<!-- 호선 채워넣기 -->
 							<a href="#">링크 1</a>
 							<a href="#">링크 2</a>
 							<a href="#">링크 3</a>
@@ -167,17 +176,18 @@
 				</div>
 			</section>
 		</div>
+	</body>
 		<!-- Footer -->
-		<footer id="footer">
-			<div class="inner">
-				<ul class="icons">
-					<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
-					<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
-					<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-					<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-				</ul>
-			</div>
-		</footer>
+	<footer id="footer">
+		<div class="inner">
+			<ul class="icons">
+				<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
+				<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+			</ul>
+		</div>
+	</footer>
 
 		<!-- Scripts -->
 		<script src="../static/assets/js/jquery.min.js"></script>
