@@ -3,6 +3,8 @@ import pandas as pd
 import os,glob
 from urllib.parse import quote 
 import requests,json,os
+import folium
+from folium.plugins import HeatMap
 
 # 패스 선언
 main_datafile_path = 'static/data/'
@@ -14,6 +16,7 @@ key_path = 'static/key/kakaoapikey.txt'
 sk_key_path = 'static/key/sk_open_api_key.txt'
 heatmap_data = f'{main_datafile_path}merged_lines.csv'
 stn_code_file_path = os.path.join('static', 'data', 'file.txt')
+main_heatmap = f'{main_datafile_path}merged_.csv'
 
 # 파일이름 입력받아 일일 데이터인지 전체기간 시간별 데이터인지 구볋 후 각각의 양식에 맞게 처리
 def stn_name_modification(name=main_file_name):
@@ -265,7 +268,7 @@ def add_lat_lng(name=heatmap_data):
     res = pd.merge(df_main, df_latlng, on='지하철역', how='left')
     res.to_csv(f'{main_datafile_path}lines_4heatmap_{name[5:12]}.csv', index=False)
     return None
-
+# sk_open_api를 사용하기 위해 역명 고유코드들을 구하는 함수
 def create_stn_code():
     url = "https://apis.openapi.sk.com/puzzle/subway/meta/stations?type=train"
     headers = {
@@ -278,14 +281,15 @@ def create_stn_code():
     df = pd.DataFrame(re)
     df.to_csv(f'{main_datafile_path}stn_code.csv',index=False)
     return None
-
+# 역명을 입력하면 고유코드를 반환하는 함수
 def get_stn_code(station):
     df_read = pd.read_csv(f'{main_datafile_path}stn_code.csv')
     stn = station  # 입력할 역
     stn_code = df_read[df_read['stationName'] == stn]['stationCode'].values[0]
     return stn_code
-
+# 역명, 요일, 시간, 분(10분단위)를 입력하면 입력한 시간에 해당되는 상하행별 최대 혼잡도 반환
 def get_cong(station,dow,hh,mm):
+    # 고유코드들을 구한 csv파일이 없으면 고유코드들을 구하는 함수 실행
     if not os.path.exists(stn_code_file_path):
         create_stn_code()
     station_code = get_stn_code(station)
@@ -297,15 +301,44 @@ def get_cong(station,dow,hh,mm):
     }
 
     response = requests.get(url, headers=headers).json()
+    # data1에는 상행선들의 데이터
+    # data2에는 하행선들의 데이터
     data1 = [pd.DataFrame(stat['data']) for stat in response['contents']['stat'] if stat['updnLine'] == 1]
     data2 = [pd.DataFrame(stat['data']) for stat in response['contents']['stat'] if stat['updnLine'] == 0]
+    # 리스트에 저장된 데이터프레임들을 하나로 만듬
     df = pd.concat(data1)
     df['updn'] = 1
     df_ = pd.concat(data2)
     df_['updn'] = 0
+    # 합쳐진 상하행선 데이터들을 합침
     df = pd.concat((df,df_))
+    # 특수한 사유로 혼잡도 0을 갖는 데이터들이 있는데 이 데이터들은 포함하지 않음
     df_res = df[df['congestionTrain'] != 0].copy()
+    # 그 시간대에서 원하는 분(10분단위)를 고름
     df_res = df_res[df_res['mm'] == mm].copy()
+    # 필요없는 부분을 제거하고 그룹바이
     df_res.drop(columns=['dow','hh','mm'],inplace=True)
     df_res = df.groupby('updn')['congestionTrain'].agg('max').reset_index().round(2)
     return df_res.values
+
+def show_heatmap(app,heatmap_name=main_heatmap):
+    df = pd.read_csv(heatmap_name)
+    target = '출근시간 승차인원'    # 입력받을 부분
+    start_month = 202201            #
+    end_month = 202305              #
+    line = '1호선'                  # 여기까지
+    df_test = df[(df.호선명 == line)&(df.사용월 >= start_month)&(df.사용월 < end_month)].copy()
+    df_test.drop(columns=['호선명','사용월'],inplace=True)
+    df_test = df_test[['지하철역','lat','lng',target]]
+    df_test.groupby(['지하철역'])[['lat','lng',target]].agg('mean').reset_index()
+    # 처음 보여 줄 곳은 데이터프레임에 있는 역들의 위경도 평균치
+    mean_lat = df_test['lat'].mean()
+    mean_lng = df_test['lng'].mean()
+    df_test.drop(columns=['지하철역'],inplace=True)
+    m = folium.Map(location=[mean_lat, mean_lng], zoom_start=10)
+    data = df_test
+    HeatMap(data).add_to(m)
+    title_html = f'<h3 align="center" style="font-size:20px">{line} {start_month} - {end_month} 기간 {target}</h3>'
+    m.get_root().html.add_child(folium.Element(title_html))
+    heatmap = os.path.join(app.static_folder,f'img/{heatmap_name}.html')
+    m.save(heatmap)
