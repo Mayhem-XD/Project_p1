@@ -339,5 +339,34 @@ def show_heatmap(app,line,target,smonth,emonth,heatmap_name=main_heatmap):
     heatmap = os.path.join(app.static_folder,'img/heatmap.html')
     m.save(heatmap)
     return '../static/img/heatmap.html'
-    # return None
-    # 여기수정중
+    
+def show_tour_map(app,station_name,cat):
+    tour = pd.read_csv(f'{main_datafile_path}수도권.csv')
+    stn = pd.read_csv(f'{main_datafile_path}stn_r_addr_final.csv')
+    df = tour[tour.분류 == cat]
+    lat = stn[stn.지하철역 == station_name].lat.iloc[0]
+    lng = stn[stn.지하철역 == station_name].lng.iloc[0]
+    print(tour.shape, df.shape)
+
+    m = folium.Map(location=[lat, lng],zoom_start=15, width='100%', height='100%')
+    for i in df.index:
+        logo = folium.CustomIcon(f'{main_datafile_path}/icons/{df.분류[i]}.png', icon_size=(30,30))
+        folium.Marker(
+            location=[df.lat[i],df.lng[i]],
+            popup=folium.Popup(df.도로명주소[i], max_width=200),
+            tooltip=df.관광지명[i],
+            icon=logo
+        ).add_to(m)
+
+    folium.Circle(
+        location=[lat,lng],
+        tooltip=station_name,
+        radius=500,
+        color="#ff7800",
+        fill_color='#ffff00',
+        fill_opacity=0.1
+    ).add_to(m)
+    show_map = os.path.join(app.static_folder,'img/station.html')
+    m.save(show_map)
+
+    return '../static/img/station.html'

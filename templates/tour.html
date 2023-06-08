@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Landing</title>
+		<title>list</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../static/assets/css/main.css" />
@@ -16,37 +16,25 @@
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 		<script src="script.js"></script>
 		<script src="{{url_for('static',filename='js/ajax.js')}}"></script>
-		<script src="../statci/js/ajax.js'"></script>
+		<!-- <script src="../statci/js/ajax.js'"></script> -->
 		<script>
-			function send(){
-			let line = $('#input_line').val();
-			let target = $('#input_target').val()
-			let sm = $('#sm').val()
-			let em = $('#em').val()
-			$.ajax({
-				type: 'POST',
-				url: '/heatmap',
-				data: {line:line,target:target,sm:sm,em:em},
-				success: function(show){
-					$('#showmap').attr({"src":"{{url_for('static',filename='img/heatmap.html')}}"});
+			function send_info() {
+            let target = $('#input_target').val();
+            let cat = $("input[name = 'cat']:checked").val();
+            $.ajax({
+                type: 'POST',
+                url: '/tour',
+                data: {target: target, cat: cat},
+                success: function(show) {
+                    $('#showmap').attr({"src": "{{url_for('static',filename='img/station.html')}}"});
+                }
+            });
         }
-
-    });
-}
 		</script>
-		<!-- <script>
-			function showDiv() {
-				var heatmapDiv = document.querySelector("#heatmapDiv");
-				heatmapDiv.style.display = "block";
-			}
-		</script> -->
-
+		
 
 		<style>
-			/* #heatmapDiv {
-				display : none;
-
-			} */
+			
 			.datepicker-container button,
 			.datepicker-container input[type="month"] {
 			color: rgb(30, 31, 70);
@@ -219,20 +207,20 @@
 					</header>
 					<div class="content">
 						<div class="dropdown">
-							<input type="text" id="input_line" name="line" placeholder="1호선">
-						</div>
-						<div class="datepicker-container">
-							<div id="button1" class="box disabled">시작월</div>
-							<input type="month" id="sm" name="sm"/>
-							<div id="button1" class="box disabled">종료월</div>
-							<input type="month" id="em" name="em"/>
+							<input type="radio" name="cat" id="cat1" value="문화" checked><label for="cat1">문화</label>
+							<input type="radio" name="cat" id="cat2" value="명소"><label for="cat2">명소</label>
+							<input type="radio" name="cat" id="cat3" value="쇼핑"><label for="cat3">쇼핑</label>
+							<input type="radio" name="cat" id="cat4" value="자연"><label for="cat4">자연</label>
 						</div>
 						<div class="dropdown">
-							<input type="text" id="input_target" name="target" placeholder="출근시간 승차인원">
+							<input type="text" id="input_target" name="target" placeholder="검색할 역 ex)수원">
+							<!-- <input type="text" id="input_target" name="target" placeholder="검색할 역 ex)수원"
+							onkeyup="if(window.event.keyCode==13){send_info()};return false;"> -->
 						</div>
-						<input type="submit" value="확인" onclick="send(); return false;">
+						<input type="submit" value="확인" onclick="send_info(); return false;">
 					</div>
 				</div>
+					
 			</form>
 
 			<!-- 히트맵 부분 -->
@@ -246,9 +234,7 @@
 								<!-- <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{url_for('static',filename='img/heatmap.html')}}" alt="..." /></div> -->
 								<div class="col-md-6"><iframe id="showmap" class="card-img-top mb-5 mb-md-0"
 									frameborder="1" width="1200px" height="700px"></iframe></div>
-								<!-- <div class="col-md-6"><iframe class="card-img-top mb-5 mb-md-0" src="../static/img/heatmap.html"
-									frameborder="1" width="1200px" height="700px"></iframe>></div> -->
-								<!-- 사진 영역을 지도로 수정 가능한지 확인해야함 -->
+								
 								<div class="col-md-6">
 								</div>
 							</div>
