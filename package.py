@@ -16,7 +16,7 @@ key_path = 'static/key/kakaoapikey.txt'
 sk_key_path = 'static/key/sk_open_api_key.txt'
 heatmap_data = f'{main_datafile_path}merged_lines.csv'
 stn_code_file_path = os.path.join('static', 'data', 'file.txt')
-main_heatmap = f'{main_datafile_path}merged_.csv'
+main_heatmap = f'{main_datafile_path}lines_4heatmap_merged_.csv'
 
 # 파일이름 입력받아 일일 데이터인지 전체기간 시간별 데이터인지 구볋 후 각각의 양식에 맞게 처리
 def stn_name_modification(name=main_file_name):
@@ -53,18 +53,18 @@ def line_sep_preproc_main():
 
         frame['출근시간 승차인원'] = frame.loc[:,['06시-07시 승차인원','07시-08시 승차인원','08시-09시 승차인원']].sum(axis=1)
         frame['09-16시 승차인원'] = frame.loc[:,['09시-10시 승차인원','10시-11시 승차인원','11시-12시 승차인원',
-                                                '12시-13시 승차인원','13시-14시 승차인원','14시-15시 승차인원','16시-17시 승차인원']].sum(axis=1)
+                                                '12시-13시 승차인원','13시-14시 승차인원','14시-15시 승차인원','15시-16시 승차인원','16시-17시 승차인원']].sum(axis=1)
         frame['퇴근시간 승차인원'] = frame.loc[:,['17시-18시 승차인원','18시-19시 승차인원','19시-20시 승차인원']].sum(axis=1)
         frame['야간 승차인원'] = frame.loc[:,['20시-21시 승차인원','21시-22시 승차인원','22시-23시 승차인원',
                                             '23시-24시 승차인원','00시-01시 승차인원','01시-02시 승차인원']].sum(axis=1)
         frame['출근시간 하차인원'] = frame.loc[:,['06시-07시 하차인원','07시-08시 하차인원','08시-09시 하차인원']].sum(axis=1)
         frame['퇴근시간 하차인원'] = frame.loc[:,['17시-18시 하차인원','18시-19시 하차인원','19시-20시 하차인원']].sum(axis=1)
         frame['09-16시 하차인원'] = frame.loc[:,['09시-10시 하차인원','10시-11시 하차인원','11시-12시 하차인원',
-                                                '12시-13시 하차인원','13시-14시 하차인원','14시-15시 하차인원','16시-17시 하차인원']].sum(axis=1)
+                                                '12시-13시 하차인원','13시-14시 하차인원','14시-15시 하차인원','15시-16시 하차인원','16시-17시 하차인원']].sum(axis=1)
         frame['야간 하차인원'] = frame.loc[:,['20시-21시 하차인원','21시-22시 하차인원','22시-23시 하차인원',
                                             '23시-24시 하차인원','00시-01시 하차인원','01시-02시 하차인원']].sum(axis=1)
-        frame['총 승차인원'] = frame.loc[:,['새벽 승차인원','출근시간 승차인원','09-16시 승차인원','야간 승차인원']].sum(axis=1)
-        frame['총 하차인원'] = frame.loc[:,['새벽 하차인원','출근시간 하차인원','09-16시 하차인원','야간 하차인원']].sum(axis=1)
+        frame['총 승차인원'] = frame.loc[:,['새벽 승차인원','출근시간 승차인원','09-16시 승차인원','퇴근시간 승차인원','야간 승차인원']].sum(axis=1)
+        frame['총 하차인원'] = frame.loc[:,['새벽 하차인원','출근시간 하차인원','09-16시 하차인원','퇴근시간 하차인원','야간 하차인원']].sum(axis=1)
         frame = frame[['사용월', '호선명', '지하철역', '출근시간 승차인원', '출근시간 하차인원', 
                         '09-16시 승차인원', '09-16시 하차인원', '퇴근시간 승차인원', '퇴근시간 하차인원',
                         '새벽 승차인원','새벽 하차인원','야간 승차인원', '야간 하차인원','총 승차인원','총 하차인원']]
@@ -321,13 +321,9 @@ def get_cong(station,dow,hh,mm):
     df_res = df.groupby('updn')['congestionTrain'].agg('max').reset_index().round(2)
     return df_res.values
 
-def show_heatmap(app,heatmap_name=main_heatmap):
+def show_heatmap(app,line,target,smonth,emonth,heatmap_name=main_heatmap):
     df = pd.read_csv(heatmap_name)
-    target = '출근시간 승차인원'    # 입력받을 부분
-    start_month = 202201            #
-    end_month = 202305              #
-    line = '1호선'                  # 여기까지
-    df_test = df[(df.호선명 == line)&(df.사용월 >= start_month)&(df.사용월 < end_month)].copy()
+    df_test = df[(df.호선명 == line)&(df.사용월 >= smonth)&(df.사용월 < emonth)].copy()
     df_test.drop(columns=['호선명','사용월'],inplace=True)
     df_test = df_test[['지하철역','lat','lng',target]]
     df_test.groupby(['지하철역'])[['lat','lng',target]].agg('mean').reset_index()
@@ -338,7 +334,9 @@ def show_heatmap(app,heatmap_name=main_heatmap):
     m = folium.Map(location=[mean_lat, mean_lng], zoom_start=10)
     data = df_test
     HeatMap(data).add_to(m)
-    title_html = f'<h3 align="center" style="font-size:20px">{line} {start_month} - {end_month} 기간 {target}</h3>'
+    title_html = f'<h3 align="center" style="font-size:20px">{line} {smonth} - {emonth} 기간 {target}</h3>'
     m.get_root().html.add_child(folium.Element(title_html))
-    heatmap = os.path.join(app.static_folder,f'img/{heatmap_name}.html')
+    heatmap = os.path.join(app.static_folder,'img/heatmap.html')
     m.save(heatmap)
+    return json.dumps('../static/img/heatmap.html')
+    # return None
