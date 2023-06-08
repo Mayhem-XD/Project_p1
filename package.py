@@ -338,6 +338,6 @@ def show_heatmap(app,line,target,smonth,emonth,heatmap_name=main_heatmap):
     m.get_root().html.add_child(folium.Element(title_html))
     heatmap = os.path.join(app.static_folder,'img/heatmap.html')
     m.save(heatmap)
-    return json.dumps('../static/img/heatmap.html')
+    return '../static/img/heatmap.html'
     # return None
     # 여기수정중

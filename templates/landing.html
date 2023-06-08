@@ -27,7 +27,7 @@
 				type: 'POST',
 				url: '/heatmap',
 				data: {line:line,target:target,sm:sm,em:em},
-				success: function(msg){
+				success: function(show){
 					$('#showmap').attr({"src":"{{url_for('static',filename='img/heatmap.html')}}"});
         }
 
@@ -210,7 +210,7 @@
 							
 						</div>
 						<!-- <input type="submit" value="확인" onclick="showDiv(); return false;"> -->
-						<input type="submit" value="확인" onclick="send()">
+						<input type="submit" value="확인" onclick="send(); return false;">
 					</div>
 			</form>
 

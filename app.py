@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import json
 
 import package as pk
 app = Flask(__name__)
@@ -18,8 +19,8 @@ def heatmap():
         emonth_ = request.form['em']
         smonth = int(smonth_.replace("-", ""))
         emonth = int(emonth_.replace("-", ""))
-        return pk.show_heatmap(app=app,line=line,target=target,smonth=smonth,emonth=emonth)
-
+        temp = pk.show_heatmap(app=app,line=line,target=target,smonth=smonth,emonth=emonth)
+        return json.dumps(temp)
 
 
 
