@@ -4,6 +4,9 @@ test.py
 test.ipynb
 key/
 data_dhm/
+package-lock.json
+package.json
+node_modules/
 
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
