@@ -108,7 +108,29 @@
 				text-align: center; /* 푸터 내용을 가운데 정렬 */
 				margin-top: 20px; /* 원하는 여백 값으로 조정 (예시: 20px) */
 			}
-
+			.content .dropdown input[type="text"]::placeholder,
+			.content .dropdown input[type="month"]::placeholder {
+				color: black;
+			}
+			.box {
+				display: inline-block;
+				padding: 4px;
+				background-color: rgb(9, 8, 68);
+				border: 3px solid rgb(9, 8, 68);
+				cursor: pointer;
+				vertical-align: middle;
+				margin-top: 44px; /* 원하는 크기로 조정 */
+			}
+			.disabled {
+				pointer-events: none;
+			}
+			::placeholder {
+			color: black !important;
+			}
+			#input_target::placeholder {
+			color: black !important;
+			}
+			
 		</style>
 		<script>
 			$(document).ready(function() {
@@ -153,9 +175,10 @@
 				$(this).val(year + '-' + ("0" + month).slice(-2));
 				}
 			});
-			});
-
-
+				document.getElementById('input_line').style.cssText = 'color: black !important';
+				document.getElementById('input_target').style.cssText = 'color: black !important';
+			
+		});
 
 		  </script>
 		  
@@ -199,9 +222,9 @@
 							<input type="text" id="input_line" name="line" placeholder="1호선">
 						</div>
 						<div class="datepicker-container">
-							<button id="button1">시작월</button>
+							<div id="button1" class="box disabled">시작월</div>
 							<input type="month" id="sm" name="sm"/>
-							<button id="button2">종료월</button>
+							<div id="button1" class="box disabled">종료월</div>
 							<input type="month" id="em" name="em"/>
 						</div>
 						<div class="dropdown">
