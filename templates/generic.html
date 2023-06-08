@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>출처</title>
+		<title>출처 및 ~</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../static/assets/css/main.css" />
@@ -42,42 +42,76 @@
 							<section id="one">
 								<div class="inner">
 									<header class="major">
-										<h1>데이터 출처 및 인용자료</h1>
+										<h1>데이터 출처 및 자체평가 </h1>
 									</header>
 									<span class="image main"><img src="../static/assets/images/pic11.jpg" alt="" /></span>
 
-									<h4>주요 데이터</h3>
+									<h3> 서울/경기 관광지 현황</h3>
 										<ul class="alt">
-											<li>https://stcis.go.kr/pivotIndi/wpsPivotIndicator.do?siteGb=P&indiClss=IC01<br>
-												교통카드 빅데이터 시스템 이용량 지표</li>
-											<li>https://stcis.go.kr/wps/main.do<br>
-												교통카드 빅데이터 통합정보시스템</li>
-											<li>https://insfiler.com/detail/rt_subway_time-0002?category=life<br>
-												[지하철(역별)] 시간대에 따른 하루 평균 지하철 승객 수(수도권) : 승하차인원</li>
-											<li>http://data.seoul.go.kr/dataList/OA-12914/S/1/datasetView.do<br>
-												서울시 지하철호선별 역별 승하차 인원 정보</li>
-											<li>https://www.data.go.kr/tcs/dss/selectStdDataDetailView.do<br>
-												공공데이터포털</li>
-											<li>https://www.data.go.kr/tcs/dss/selectStdDataDetailView.do<br>
-												전국길관광정보표준데이터</li>
+											<li>(https://www.data.go.kr/data/15077663)<br>
+												경기도_관광쇼핑지 현황(2022-04-20)</li>
+											<li>(https://www.data.go.kr/data/15077668)<br>
+												경기도_자연관광지 현황(2022-04-20)</li>
+											<li>(https://www.data.go.kr/data/15077667)<br>
+												경기도_역사관광지 현황(2022-04-20)</li>
+											<li>(https://www.data.go.kr/data/15077666)<br>
+												경기도_문화시설지 현황(2022-04-20)</li>
 										</ul>
 										<br>
-									<h5>참고 자료</h5>
-											<ul>
-												<li>https://www.bigdata-culture.kr/bigdata/user/content.do?sq=75<br>
-													포털- 문화 역세권</li>
-												<li>https://www.culture.go.kr/data/main/main.do<br>
-														문화공공데이터광장</li>
-												<li>https://www.data.go.kr/data/15058052/openapi.do?recommendDataYn=Y<br>
-													서울특별시_지하철 실시간 열차 위치정보</li>
-												<li>https://www.data.go.kr/data/15058052/openapi.do?recommendDataYn=Y<br>
-													서울특별시_지하철 실시간 도착정보</li>
-												<li>https://data.seoul.go.kr/dataList/OA-21224/S/1/datasetView.do<br>
-													서울시 행정동별 지하철 총 승차 승객수 정보</li>
+									<h3>서울 열린데이터 광장</h3>
+											<ul class="alt">
+												<li>(https://www.data.go.kr/data/15083935)<br>
+													서울시 관광 자연(2023.05.04.)</li>
+												<li>(https://www.data.go.kr/data/15083933)<br>
+													서울시 관광 명소(2023.05.04.)</li>
+												<li>(http://data.seoul.go.kr/dataList/OA-21053/S/1/datasetView.do)<br>
+													서울시 관광 쇼핑 (2023.05.04.)</li>
+												<li>(http://data.seoul.go.kr/dataList/OA-21052/S/1/datasetView.do)<br>
+													서울시 관광 문화(2023.05.04.)</li>
 											</ul>
+									<h3>지하철 승하차 인원정보</h3>
+											<ul class="alt">
+												<li>(https://data.seoul.go.kr/dataList/OA-12914/S/1/datasetView.do#)<br>
+													서울시 지하철호선별 역별 승하차 인원 정보</li>
+												<li>(https://data.seoul.go.kr/dataList/OA-12252/S/1/datasetView.do)<br>
+													20,21,22년의 월간 데이터 서울시 지하철 호선별 역별 시간대별 승하차 인원 정보</li>
+												<li>-2015~2023.04의 일간 데이터</li>
+											</ul>
+											<br>
+											<br>
+									<h3>데이터 전처리 과정 및 자체평가</h3>
+										<ul>
+											<ul>
+												<li>(04~05 : 새벽, 06~09:  출근시간, 09~16, 17~20:퇴근시간, 20~02: 야간, 총 승차/하차인원)</li>
+												<li>호선 재분류</li>
+												<li>사용일자에 따라 주중과 주말을 분류함</li>
+												<li>KAKAO local AliI로 각 역의 위도와 경도를 구함.(카카오 로고)</li>
+												<li>위도/경도를 구한 데이터와 승하차객수가 있는 데이터를 합침</li>
+												<li>합친 데이터로 folium 등 자료를 만듬</li>
+											</ul>
+											<h5>시각화 자료 보여주기</h5>
+											<ul>
+												<li>3년간 월간 승하차객수, 시간대별 승하차객수Top10</li>
+												<li>웹 동작 자료</li>
+											</ul>
+											<h5>프로젝트 관리</h5>
+											<ul>
+												<li>사용한 도구 : github, google drive</li>
+												<li>상세 일정 계획 대비 실적</li>
+											</ul>
+											<h5>작품 활용 방안/기대효과</h5>
+											<ul>
+												<li></li>
+												<li></li>
+											</ul>
+											<h5>문제점</h5>
+											<ul>
+												<li>누락/오타 데이터가 많음</li>
+												<li>역별 데이터 중 호선이 겹치는 역이 한 가지 호선으로만 등록돼있음(ex. 한대앞:4호선+안산선인데 4호선으로만 적힘)</li>
+											</ul>
+										</ul>
 								</div>
 							</section>
-
 					</div>
 
 				<!-- Contact -->
