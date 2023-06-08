@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+<!--
+	Forty by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>list</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../static/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="../static/assets/css/noscript.css" /></noscript>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+		<script src="script.js"></script>
+		<script src="{{url_for('static',filename='js/ajax.js')}}"></script>
+		<!-- <script src="../statci/js/ajax.js'"></script> -->
+		<script>
+			function send_info() {
+            let target = $('#input_target').val();
+            let cat = $("input[name = 'cat']:checked").val();
+            $.ajax({
+                type: 'POST',
+                url: '/tour',
+                data: {target: target, cat: cat},
+                success: function(show) {
+                    $('#showmap').attr({"src": "{{url_for('static',filename='img/station.html')}}"});
+                }
+            });
+        }
+		</script>
+		
+
+		<style>
+			
+			.datepicker-container button,
+			.datepicker-container input[type="month"] {
+			color: rgb(30, 31, 70);
+		}
+			.dropdown-content-options {
+				width: 200px; /* 예시로 200px로 설정 */
+			}
+			.dropdown-content a {
+				color: #000000;
+			}
+			.dropdown-content-options {
+				color: #000000;
+			}
+			.dropdown {
+				position: relative;
+				display: inline-block;
+			}
+
+			.dropdown-content {
+				display: none;
+				position: absolute;
+				background-color: #f9f9f9;
+				min-width: 160px;
+				box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+				z-index: 1;
+				padding: 10px 0;
+			}
+
+			.dropdown:hover .dropdown-content {
+				display: block;
+			}
+
+			.dropdown-content a {
+				display: block;
+				padding: 8px 16px;
+				text-decoration: none;
+				color: #333;
+			}
+			/* 수정한 부분 */
+			.dropdown-content span {
+				display: inline;
+				padding: 2px 8px;
+				text-decoration: none;
+				color: #333;
+			}
+			.datepicker-container {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+			.datepicker-container button {
+				padding: 5px 10px;
+			}
+			.datepicker-container input {
+				padding: 5px;
+				width: 150px;
+			}
+			#footer {
+				text-align: center; /* 푸터 내용을 가운데 정렬 */
+				margin-top: 20px; /* 원하는 여백 값으로 조정 (예시: 20px) */
+			}
+			.content .dropdown input[type="text"]::placeholder,
+			.content .dropdown input[type="month"]::placeholder {
+				color: black;
+			}
+			.box {
+				display: inline-block;
+				padding: 4px;
+				background-color: rgb(9, 8, 68);
+				border: 3px solid rgb(9, 8, 68);
+				cursor: pointer;
+				vertical-align: middle;
+				margin-top: 44px; /* 원하는 크기로 조정 */
+			}
+			.disabled {
+				pointer-events: none;
+			}
+			::placeholder {
+			color: black !important;
+			}
+			#input_target::placeholder {
+			color: black !important;
+			}
+			
+		</style>
+		<script>
+			$(document).ready(function() {
+			$("#button1").click(function() {
+				$("#monthpicker1").datepicker("show");
+			});
+
+			$("#monthpicker1").datepicker({
+				changeMonth: true,
+				changeYear: true,
+				showButtonPanel: true,
+				dateFormat: 'yy-mm',
+				beforeShow: function(input, inst) {
+				// 날짜 선택 영역을 숨김
+				inst.dpDiv.addClass('ui-datepicker-monthpicker');
+				},
+				onClose: function(dateText, inst) {
+				var selectedDate = $(this).datepicker('getDate');
+				var year = selectedDate.getFullYear();
+				var month = selectedDate.getMonth() + 1;
+				$(this).val(year + '-' + ("0" + month).slice(-2));
+				}
+			});
+
+			$("#button2").click(function() {
+				$("#monthpicker2").datepicker("show");
+			});
+
+			$("#monthpicker2").datepicker({
+				changeMonth: true,
+				changeYear: true,
+				showButtonPanel: true,
+				dateFormat: 'yy-mm',
+				beforeShow: function(input, inst) {
+				// 날짜 선택 영역을 숨김
+				inst.dpDiv.addClass('ui-datepicker-monthpicker');
+				},
+				onClose: function(dateText, inst) {
+				var selectedDate = $(this).datepicker('getDate');
+				var year = selectedDate.getFullYear();
+				var month = selectedDate.getMonth() + 1;
+				$(this).val(year + '-' + ("0" + month).slice(-2));
+				}
+			});
+				document.getElementById('input_line').style.cssText = 'color: black !important';
+				document.getElementById('input_target').style.cssText = 'color: black !important';
+			
+		});
+
+		  </script>
+		  
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Header -->
+			<!-- Note: The "styleN" class below should match that of the banner element. -->
+			<header id="header" class="alt">
+				<a href="index.html" class="logo"><strong>2조</strong> <span>역이요</span></a>
+				<nav>
+					<a href="#menu"></a>
+				</nav>
+			</header>
+
+
+			<!-- Menu -->
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="/index">Home</a></li>
+					<li><a href="/heatmap">히트맵</a></li>
+					<li><a href="/generic">출처</a></li>
+				</ul>
+			</nav>
+
+			<!-- Banner -->
+			<!-- Note: The "styleN" class below should match that of the header element. -->
+			<form id="banner" class="style2" method="post">
+				<div class="inner">
+					<span class="image">
+						<img src="../static/assets/images/pic07.jpg" alt="" />
+					</span>
+					<header class="major">
+						<h1>투어</h1>
+					</header>
+					<div class="content">
+						<div class="dropdown">
+							<input type="radio" name="cat" id="cat1" value="문화" checked><label for="cat1">문화</label>
+							<input type="radio" name="cat" id="cat2" value="명소"><label for="cat2">명소</label>
+							<input type="radio" name="cat" id="cat3" value="쇼핑"><label for="cat3">쇼핑</label>
+							<input type="radio" name="cat" id="cat4" value="자연"><label for="cat4">자연</label>
+						</div>
+						<div class="dropdown">
+							<input type="text" id="input_target" name="target" placeholder="검색할 역 ex)수원">
+							<!-- <input type="text" id="input_target" name="target" placeholder="검색할 역 ex)수원"
+							onkeyup="if(window.event.keyCode==13){send_info()};return false;"> -->
+						</div>
+						<input type="submit" value="확인" onclick="send_info(); return false;">
+					</div>
+				</div>
+					
+			</form>
+
+			<!-- 히트맵 부분 -->
+			<section id="three">
+				<div class="inner" id="heatmapDiv">
+					<header class="major">
+					</header>
+					<section class="py-5">
+						<div class="container px-4 px-lg-5 my-5">
+							<div class="row gx-4 gx-lg-5 align-items-center">
+								<!-- <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{url_for('static',filename='img/heatmap.html')}}" alt="..." /></div> -->
+								<div class="col-md-6"><iframe id="showmap" class="card-img-top mb-5 mb-md-0"
+									frameborder="1" width="1200px" height="700px"></iframe></div>
+								
+								<div class="col-md-6">
+								</div>
+							</div>
+						</div>
+						</div>
+					</section>
+				
+			</section>
+		</div>
+	</body>
+	<!-- Footer -->
+	<footer id="footer">
+		<div class="inner">
+			<ul class="icons">
+				<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
+				<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+			</ul>
+		</div>
+	</footer>
+
+	<!-- Scripts -->
+	<script src="../static/assets/js/jquery.min.js"></script>
+	<script src="../static/assets/js/browser.min.js"></script>
+	<script src="../static/assets/js/breakpoints.min.js"></script>
+	<script src="../static/assets/js/util.js"></script>
+	<script src="../static/assets/js/main.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script>
+		function showDropdownContent() {
+			document.getElementById("dropdownContent").classList.toggle("show");
+		}
+
+		function showDropdownContentOptions() {
+			document.getElementById("dropdownContentOptions").classList.toggle("show");
+		}
+
+		$(document).ready(function () {
+			$("#startDateBtn").datepicker();
+			$("#endDateBtn").datepicker();
+		});
+		$("#monthpicker1").datepicker({
+			onSelect: function(dateText, inst) {
+				var selectedDate = $(this).datepicker('getDate');
+				var year = selectedDate.getFullYear();
+				var month = selectedDate.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줍니다.
+				$(this).val(year + '-' + ("0" + month).slice(-2));
+			}
+		});
+		$("#monthpicker2").datepicker({
+			onSelect: function(dateText, inst) {
+				var selectedDate = $(this).datepicker('getDate');
+				var year = selectedDate.getFullYear();
+				var month = selectedDate.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줍니다.
+				$(this).val(year + '-' + ("0" + month).slice(-2));
+			}
+		});
+	</script>
+</html>
