@@ -5,6 +5,8 @@ from urllib.parse import quote
 import requests,json,os
 import folium
 from folium.plugins import HeatMap
+from datetime import datetime
+
 
 # 패스 선언
 main_datafile_path = 'static/data/'
@@ -288,11 +290,14 @@ def get_stn_code(station):
     stn_code = df_read[df_read['stationName'] == stn]['stationCode'].values[0]
     return stn_code
 # 역명, 요일, 시간, 분(10분단위)를 입력하면 입력한 시간에 해당되는 상하행별 최대 혼잡도 반환
-def get_cong(station,dow,hh,mm):
+def get_cong(station,hh,mm):
     # 고유코드들을 구한 csv파일이 없으면 고유코드들을 구하는 함수 실행
     if not os.path.exists(stn_code_file_path):
         create_stn_code()
     station_code = get_stn_code(station)
+    weekdays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+    today = datetime.today().weekday()
+    dow = weekdays[today]
     url = f"https://apis.openapi.sk.com/puzzle/subway/congestion/stat/train/stations/{station_code}?dow={dow}&hh={hh}"
     headers = {
         "accept": "application/json",
@@ -370,3 +375,7 @@ def show_tour_map(app,station_name,cat):
     m.save(show_map)
 
     return '../static/img/station.html'
+
+def show_cong(timep,target,app):
+    hh, mm = timep.split(":")
+    get_cong(station=target,hh=hh,mm=mm)

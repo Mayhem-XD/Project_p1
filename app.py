@@ -36,29 +36,15 @@ def tour():
 def generic():
     return render_template('/generic.html')
 
+@app.route('/index2', methods=['GET','POST'])
+def index2():
+    if request.method == 'GET':
+        return render_template('/index_section2.html')
+    else:
+        timep = request.form['timep']
+        target = request.form['stn']
+        return render_template('/test.html',timep=timep,target=target)
 
-# @app.route('/self_intr')
-# def self_intr():
-#     menu = {'ho':0,'us':1,'cr':0,'sc':0}
-#     return render_template('prototype/self_intr.html')
-
-# @app.route('/crawling/interpark',methods=['GET','POST'])
-# def interpark():
-#     return render_template('prototype/interpark.html')
-
-# @app.route('/crawling/genie',methods=['GET','POST'])
-# def genie():
-#     return render_template('prototype/genie.html')
-
-# @app.route('/crawling/siksin',methods=['GET','POST'])
-# def siksin():
-#     menu = {'ho':0,'us':0,'cr':1,'sc':0}
-#     if request.method == 'GET':
-#         return render_template('prototype/siksin.html')
-#     else:
-#         place = request.form['place']
-#         siksin_list = ut.siksin_search(place)
-#         return render_template('prototype/siksin_res.html')
 
 
 if __name__ == '__main__':
