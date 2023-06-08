@@ -32,6 +32,9 @@ def tour():
         temp = pk.show_tour_map(app=app,station_name=station_name,cat=cat)
         return json.dumps(temp)
 
+@app.route('/generic')
+def generic():
+    return render_template('/generic.html')
 
 
 # @app.route('/self_intr')
