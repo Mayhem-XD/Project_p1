@@ -15,8 +15,38 @@
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 		<script src="script.js"></script>
+		<script src="{{url_for('static',filename='js/ajax.js')}}"></script>
+		<script src="../statci/js/ajax.js'"></script>
+		<script>
+			function send(){
+			let line = $('#input_line').val();
+			let target = $('#input_target').val()
+			let sm = $('#sm').val()
+			let em = $('#em').val()
+			$.ajax({
+				type: 'POST',
+				url: '/heatmap',
+				data: {line:line,target:target,sm:sm,em:em},
+				success: function(msg){
+					$('#showmap').attr({"src":"{{url_for('static',filename='img/heatmap.html')}}"});
+        }
+
+    });
+}
+		</script>
+		<!-- <script>
+			function showDiv() {
+				var heatmapDiv = document.querySelector("#heatmapDiv");
+				heatmapDiv.style.display = "block";
+			}
+		</script> -->
+
 
 		<style>
+			/* #heatmapDiv {
+				display : none;
+
+			} */
 			.datepicker-container button,
 			.datepicker-container input[type="month"] {
 			color: rgb(30, 31, 70);
@@ -52,6 +82,13 @@
 			.dropdown-content a {
 				display: block;
 				padding: 8px 16px;
+				text-decoration: none;
+				color: #333;
+			}
+			/* 수정한 부분 */
+			.dropdown-content span {
+				display: inline;
+				padding: 2px 8px;
 				text-decoration: none;
 				color: #333;
 			}
@@ -118,6 +155,8 @@
 			});
 			});
 
+
+
 		  </script>
 		  
 	</head>
@@ -147,7 +186,7 @@
 
 			<!-- Banner -->
 			<!-- Note: The "styleN" class below should match that of the header element. -->
-			<section id="banner" class="style2">
+			<form id="banner" class="style2" method="post">
 				<div class="inner">
 					<span class="image">
 						<img src="../static/assets/images/pic07.jpg" alt="" />
@@ -155,44 +194,39 @@
 					<header class="major">
 						<h1>히트맵</h1>
 					</header>
-					<div class="content">
+					<dic class="content">
 						<div class="dropdown">
-							<button>호선</button>
-							<div class="dropdown-content" id="dropdown1">
-								<!-- 호선 채워넣기 -->
-								<a href="#">링크 1</a>
-								<a href="#">링크 2</a>
-								<a href="#">링크 3</a>
-							</div>
+							<input type="text" id="input_line" name="line" placeholder="1호선">
 						</div>
-
 						<div class="datepicker-container">
 							<button id="button1">시작월</button>
-							<input type="month" name="monthField"/>
+							<input type="month" id="sm" name="sm"/>
 							<button id="button2">종료월</button>
-							<input type="month" name="monthField"/>
+							<input type="month" id="em" name="em"/>
 						</div>
 						<div class="dropdown">
-							<button>옵션</button>
-							<div class="dropdown-content" id="dropdown2">
-								<a href="#">링크 4</a>
-								<a href="#">링크 5</a>
-								<a href="#">링크 6</a>
-							</div>
+							
+								<input type="text" id="input_target" name="target" placeholder="출근시간 승차인원">
+							
 						</div>
-						<button>확인</button>
+						<!-- <input type="submit" value="확인" onclick="showDiv(); return false;"> -->
+						<input type="submit" value="확인" onclick="send()">
 					</div>
-			</section>
+			</form>
 
 			<!-- 히트맵 부분 -->
 			<section id="three">
-				<div class="inner">
+				<div class="inner" id="heatmapDiv">
 					<header class="major">
 					</header>
 					<section class="py-5">
 						<div class="container px-4 px-lg-5 my-5">
 							<div class="row gx-4 gx-lg-5 align-items-center">
-								<div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/1200x700/dee2e6/6c757d.jpg" alt="..." /></div>
+								<!-- <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{url_for('static',filename='img/heatmap.html')}}" alt="..." /></div> -->
+								<div class="col-md-6"><iframe id="showmap" class="card-img-top mb-5 mb-md-0"
+									frameborder="1" width="1200px" height="700px"></iframe></div>
+								<!-- <div class="col-md-6"><iframe class="card-img-top mb-5 mb-md-0" src="../static/img/heatmap.html"
+									frameborder="1" width="1200px" height="700px"></iframe>></div> -->
 								<!-- 사진 영역을 지도로 수정 가능한지 확인해야함 -->
 								<div class="col-md-6">
 								</div>
