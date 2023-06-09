@@ -27,8 +27,17 @@
 				type: 'POST',
 				url: '/index2',
 				data: { timep: timep, stn: stn},
-				success: function (show) {
+				success: function (result) {
 					// $('#showmap').attr({ "src": "{{url_for('static',filename='img/heatmap.html')}}" });
+					// document.getElementById('init_img').style.display = 'none';
+					// document.getElementById('#show_img').style.display = 'block';
+					$('#init_img').css('display', 'none');
+					$('#show_img').css('display', 'block');
+					let dn = result.dn;
+    				let up = result.up;
+					$('#i1').attr('src', '/static/img/stage_'+dn+'.png');
+					$('#i2').attr('src', '/static/img/stage_'+up+'.png');
+
 				}
 
 			});
@@ -148,18 +157,17 @@
 					</header>
 					<section class="py-5">
 						<div class="container px-4 px-lg-5 my-5">
-							<div class="row gx-4 gx-lg-5 align-items-center">
-
-								<!-- ###################### 조건문###### 혼잡도 1~ 5단계에 따라 해당 이미지 나오게 하는 식 아래 추가 예정 (혼잡도 0~190%) ############## -->
-								<!-- <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="../static/img/stage_1.png" alt="stat" /></div> -->
-								<!-- <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="../static/img/stage_2.png" alt="stat" /></div> -->
-								<!-- <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="../static/img/stage_3.jpg" alt="stat" /></div> -->
-								<!-- <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="../static/img/stage_4.jpeg" alt="stat" /></div> -->
-								<!-- <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="../static/img/stage_5.png" alt="stat" /></div> -->
-
+							<div class="row gx-4 gx-lg-5 align-items-center" >
 								<!-- 아래 코드가 지하철 이미지(웹 기본 이미지로 사용 예정) -->
-								<div class="col-md-6"><img class="card-img-top mb-5 mb-md-0"
-										src="../static/img/subway_main.png" alt="subway" /></div>
+								<div class="col-md-6" id="init_img"><img class="card-img-top mb-5 mb-md-0"
+										src="../static/img/subway_main.png" alt="subway" />
+								</div>
+								<div class="col-md-6" id="show_img" style="display: none;">
+									<p>하행</p><br>
+									<iframe frameborder="1" width="600" height="300" id="i1"></iframe></br>
+									<p>상행</p><br>
+    								<iframe  frameborder="1" width="600" height="300" id="i2"></iframe>
+								</div>
 								<div class="col-md-6">
 									<div class="d-flex">
 											<!-- 여기 부턴가? -->
@@ -181,7 +189,7 @@
 																$('input.timepicker').timepicker({
 																	timeFormat: 'HH:mm',
 																	interval: 10,
-																	startTime: '00:00',
+																	startTime: '04:00',
 																	dynamic: false,
 																	dropdown: true,
 																	scrollbar: true
@@ -192,7 +200,7 @@
 												</tr>
 												<tr>
 													<td colspan="2" style="text-align: center;">
-														<input type="submit" value="제출" onclick="send_val()">
+														<input type="submit" value="제출" onclick="send_val(); return false;">
 													</td>
 												</tr>
 											</table>
@@ -207,10 +215,7 @@
 		</div>
 		</section>
 	</div>
-	<!-- <ul class="actions">
-						<li><a href="landing.html" class="button next">히트맵 확인하러가기</a></li>
-					</ul> -->
-	<!-- Footer -->
+
 	<footer id="footer">
 		<div class="inner">
 			<ul class="icons">
@@ -227,16 +232,10 @@
 	</footer>
 	</div>
 
-	<!-- <div id="wrapper"> -->
-	<!-- Sidebar -->
-	<!-- <div id="sidebar"> -->
-	<!-- Sidebar content goes here -->
-	<!-- You can add your sidebar links or any other content -->
+
 	</div>
 
-	<!-- Existing content -->
-	<!-- Header, menu, banner, and main content sections go here -->
-	<!-- ... -->
+
 	</div>
 
 
