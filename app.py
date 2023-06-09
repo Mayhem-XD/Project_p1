@@ -42,15 +42,6 @@ def tour():
 def generic():
     return render_template('/generic.html')
 
-@app.route('/index2', methods=['GET','POST'])
-def index2():
-    if request.method == 'GET':
-        return render_template('/index_section2.html')
-    else:
-        timep = request.form['timep']
-        target = request.form['stn']
-        dn,up = pk.show_cong(timep=timep,target=target)
-        return jsonify({'dn': dn, 'up': up})
 
 
 
