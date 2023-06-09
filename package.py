@@ -14,7 +14,7 @@ temp_files_path = 'static/data/temp_files/'
 main_file_name = f'{main_datafile_path}metro_ridership_by_line_stn_time.csv'
 xlsx_path = 'static/data/total_stn_info_20230317.xlsx'
 temp_info_name = f'{temp_files_path}temp_info.csv'
-# key_path = 'static/key/kakaoapikey.txt'
+key_path = 'static/key/kakaoapikey.txt'
 # sk_key_path = 'static/key/sk_open_api_key.txt'
 sk_key_path = os.path.join('static', 'key', 'sk_open_api_key.txt')
 heatmap_data = f'{main_datafile_path}merged_lines.csv'
@@ -53,7 +53,6 @@ def line_sep_preproc_main():
     lines = df.호선명.unique().tolist()
     df_dict = {line: df[df['호선명'] == line].copy() for line in lines}
     for line, frame in df_dict.items():
-        # frame = df[df['호선명']==line].copy()
         frame['새벽 승차인원'] = frame.loc[:,['04시-05시 승차인원','05시-06시 승차인원']].sum(axis=1)
         frame['새벽 하차인원'] = frame.loc[:,['04시-05시 하차인원','05시-06시 하차인원']].sum(axis=1)
 
