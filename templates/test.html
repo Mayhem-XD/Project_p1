@@ -7,7 +7,9 @@
     <title>Document</title>
 </head>
 <body>
-    <h3>{{timep}}</h3>
-    <h4>{{target}}</h4>
+    <h3>{{dn}}</h3>
+    <h4>{{up}}</h4>
+    <iframe src="{{ url_for('static', filename='img/stage_' + dn|string + '.png') }}" frameborder="1" width="600" height="400"></iframe></br>
+    <iframe src="{{ url_for('static', filename='img/stage_' + up|string + '.png') }}" frameborder="1" width="600" height="400"></iframe>
 </body>
 </html>

@@ -15,10 +15,14 @@ main_file_name = f'{main_datafile_path}metro_ridership_by_line_stn_time.csv'
 xlsx_path = 'static/data/total_stn_info_20230317.xlsx'
 temp_info_name = f'{temp_files_path}temp_info.csv'
 key_path = 'static/key/kakaoapikey.txt'
-sk_key_path = 'static/key/sk_open_api_key.txt'
+# sk_key_path = 'static/key/sk_open_api_key.txt'
+sk_key_path = os.path.join('static', 'key', 'sk_open_api_key.txt')
 heatmap_data = f'{main_datafile_path}merged_lines.csv'
-stn_code_file_path = os.path.join('static', 'data', 'file.txt')
+stn_code_file_path = os.path.join('static', 'data', 'stn_code.csv')
 main_heatmap = f'{main_datafile_path}lines_4heatmap_merged_.csv'
+
+with open(sk_key_path) as f_:
+    sk_key = f_.read()
 
 # 파일이름 입력받아 일일 데이터인지 전체기간 시간별 데이터인지 구볋 후 각각의 양식에 맞게 처리
 def stn_name_modification(name=main_file_name):
@@ -49,7 +53,6 @@ def line_sep_preproc_main():
     lines = df.호선명.unique().tolist()
     df_dict = {line: df[df['호선명'] == line].copy() for line in lines}
     for line, frame in df_dict.items():
-        # frame = df[df['호선명']==line].copy()
         frame['새벽 승차인원'] = frame.loc[:,['04시-05시 승차인원','05시-06시 승차인원']].sum(axis=1)
         frame['새벽 하차인원'] = frame.loc[:,['04시-05시 하차인원','05시-06시 하차인원']].sum(axis=1)
 
@@ -276,7 +279,7 @@ def create_stn_code():
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
-        "appkey": sk_key_path
+        "appkey": sk_key
     }
     response = requests.get(url, headers=headers).json()
     re = response['contents']
@@ -302,7 +305,7 @@ def get_cong(station,hh,mm):
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
-        "appkey": sk_key_path
+        "appkey": sk_key
     }
 
     response = requests.get(url, headers=headers).json()
@@ -376,6 +379,14 @@ def show_tour_map(app,station_name,cat):
 
     return '../static/img/station.html'
 
-def show_cong(timep,target,app):
+def show_cong(timep, target):
     hh, mm = timep.split(":")
-    get_cong(station=target,hh=hh,mm=mm)
+    cong = get_cong(station=target, hh=hh, mm=mm)
+    dn = int(cong[0][1])
+    up = int(cong[1][1])
+    dn_img = 'a' if dn < 20 else 'b' if dn < 40 else 'c' if dn < 80 else 'd' if dn < 140 else 'e'
+    up_img = 'a' if up < 20 else 'b' if up < 40 else 'c' if up < 80 else 'd' if up < 140 else 'e'
+    return dn_img,up_img
+    # return target
+
+# 0-20 20-40 40-80 80-140 140-

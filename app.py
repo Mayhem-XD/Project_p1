@@ -1,12 +1,18 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import json
 
 import package as pk
 app = Flask(__name__)
 
-@app.route('/index')
-def home():
-    return render_template('/index.html')
+@app.route('/index', methods=['GET','POST'])
+def index():
+    if request.method == 'GET':
+        return render_template('/index.html')
+    else:
+        timep = request.form['timep']
+        target = request.form['stn']
+        dn,up = pk.show_cong(timep=timep,target=target)
+        return jsonify({'dn': dn, 'up': up})
 
 @app.route('/heatmap',methods=['GET','POST'])
 def heatmap():
@@ -36,14 +42,6 @@ def tour():
 def generic():
     return render_template('/generic.html')
 
-@app.route('/index2', methods=['GET','POST'])
-def index2():
-    if request.method == 'GET':
-        return render_template('/index_section2.html')
-    else:
-        timep = request.form['timep']
-        target = request.form['stn']
-        return render_template('/test.html',timep=timep,target=target)
 
 
 
